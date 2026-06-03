@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futebol Tracker</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+}
+
+header{
+    background:#0f172a;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+header h1{
+    margin-bottom:10px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+nav button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    background:#22c55e;
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+}
+
+nav button:hover{
+    background:#16a34a;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:20px auto;
+}
+
+.section{
+    display:none;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.active{
+    display:block;
+}
+
+h2{
+    margin-bottom:15px;
+    color:#0f172a;
+}
+
+input, textarea, select{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+button.salvar{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+    width:100%;
+}
+
+button.salvar:hover{
+    background:#1d4ed8;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+    border-left:5px solid #22c55e;
+}
+
+ul{
+    list-style:none;
+}
+
+li{
+    padding:10px;
+    margin-bottom:8px;
+    background:#eef2ff;
+    border-radius:8px;
+}
+
+.dashboard-info{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.info-box{
+    background:#22c55e;
+    color:white;
+    padding:20px;
+    text-align:center;
+    border-radius:10px;
+}
+
+footer{
+    text-align:center;
+    margin:20px;
+    color:#666;
+}
+
+@media(max-width:768px){
+    nav{
+        flex-wrap:wrap;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>⚽ Futebol Tracker</h1>
+    <p>Acompanhe seus treinos, alimentação e evolução física</p>
+
+    <nav>
+        <button onclick="mostrar('login')">Login</button>
+        <button onclick="mostrar('cadastro')">Cadastro</button>
+        <button onclick="mostrar('dashboard')">Dashboard</button>
+    </nav>
+</header>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <section id="login" class="section active">
+        <h2>Login</h2>
+
+        <input type="email" id="loginEmail" placeholder="Digite seu email">
+        <input type="password" id="loginSenha" placeholder="Digite sua senha">
+
+        <button class="salvar" onclick="login()">
+            Entrar
+        </button>
+    </section>
+
+    <!-- CADASTRO -->
+    <section id="cadastro" class="section">
+        <h2>Cadastro de Usuário</h2>
+
+        <input type="text" id="nome" placeholder="Nome completo">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="senha" placeholder="Senha">
+
+        <button class="salvar" onclick="cadastrar()">
+            Cadastrar
+        </button>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section">
+
+        <h2>Painel do Atleta</h2>
+
+        <div class="dashboard-info">
+            <div class="info-box">
+                <h3 id="totalTreinos">0</h3>
+                <p>Treinos</p>
+            </div>
+
+            <div class="info-box">
+                <h3 id="totalRefeicoes">0</h3>
+                <p>Refeições</p>
+            </div>
+
+            <div class="info-box">
+                <h3 id="pesoAtual">0 kg</h3>
+                <p>Peso Atual</p>
+            </div>
+        </div>
+
+        <div class="cards">
+
+            <!-- TREINO -->
+            <div class="card">
+                <h3>Registrar Treino</h3>
+
+                <input type="date" id="dataTreino">
+
+                <select id="tipoTreino">
+                    <option>Físico</option>
+                    <option>Técnico</option>
+                    <option>Tático</option>
+                    <option>Jogo</option>
+                </select>
+
+                <input type="number" id="duracao" placeholder="Duração (minutos)">
+
+                <textarea id="obsTreino" placeholder="Observações"></textarea>
+
+                <button class="salvar" onclick="registrarTreino()">
+                    Salvar Treino
+                </button>
+            </div>
+
+            <!-- REFEIÇÃO -->
+            <div class="card">
+                <h3>Registrar Refeição</h3>
+
+                <input type="date" id="dataRefeicao">
+
+                <textarea id="refeicao"
+                placeholder="Descreva sua refeição"></textarea>
+
+                <button class="salvar" onclick="registrarRefeicao()">
+                    Salvar Refeição
+                </button>
+            </div>
+
+            <!-- EVOLUÇÃO -->
+            <div class="card">
+                <h3>Registrar Evolução Física</h3>
+
+                <input type="number" id="peso" placeholder="Peso (kg)">
+                <input type="number" id="altura" placeholder="Altura (m)">
+
+                <textarea id="obsPeso"
+                placeholder="Observações"></textarea>
+
+                <button class="salvar" onclick="registrarPeso()">
+                    Salvar Evolução
+                </button>
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="card">
+            <h3>Histórico de Treinos</h3>
+            <ul id="listaTreinos"></ul>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <h3>Histórico de Refeições</h3>
+            <ul id="listaRefeicoes"></ul>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    Futebol Tracker © 2025
+</footer>
+
+<script>
+
+// Troca de telas
+function mostrar(id){
+
+    document
+    .querySelectorAll(".section")
+    .forEach(sec => sec.classList.remove("active"));
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+}
+
+// Cadastro
+function cadastrar(){
+
+    let usuario = {
+        nome: document.getElementById("nome").value,
+        email: document.getElementById("email").value,
+        senha: document.getElementById("senha").value
+    };
+
+    localStorage.setItem(
+        "usuario",
+        JSON.stringify(usuario)
+    );
+
+    alert("Usuário cadastrado com sucesso!");
+}
+
+// Login
+function login(){
+
+    let email = document.getElementById("loginEmail").value;
+    let senha = document.getElementById("loginSenha").value;
+
+    let usuario = JSON.parse(
+        localStorage.getItem("usuario")
+    );
+
+    if(
+        usuario &&
+        usuario.email === email &&
+        usuario.senha === senha
+    ){
+        alert("Login realizado!");
+        mostrar("dashboard");
+    }
+    else{
+        alert("Email ou senha incorretos!");
+    }
+}
+
+// Treinos
+let treinos = [];
+
+function registrarTreino(){
+
+    let treino = {
+        data: dataTreino.value,
+        tipo: tipoTreino.value,
+        duracao: duracao.value
+    };
+
+    treinos.push(treino);
+
+    atualizarTreinos();
+}
+
+function atualizarTreinos(){
+
+    let lista = document.getElementById("listaTreinos");
+
+    lista.innerHTML = "";
+
+    treinos.forEach(t => {
+
+        lista.innerHTML += `
+            <li>
+                📅 ${t.data} |
+                ⚽ ${t.tipo} |
+                ⏱ ${t.duracao} min
+            </li>
+        `;
+    });
+
+    totalTreinos.innerText = treinos.length;
+}
+
+// Refeições
+let refeicoes = [];
+
+function registrarRefeicao(){
+
+    let refeicao = {
+        data: dataRefeicao.value,
+        descricao: document.getElementById("refeicao").value
+    };
+
+    refeicoes.push(refeicao);
+
+    atualizarRefeicoes();
+}
+
+function atualizarRefeicoes(){
+
+    let lista = document.getElementById("listaRefeicoes");
+
+    lista.innerHTML = "";
+
+    refeicoes.forEach(r => {
+
+        lista.innerHTML += `
+            <li>
+                📅 ${r.data}
+                <br>
+                🍽 ${r.descricao}
+            </li>
+        `;
+    });
+
+    totalRefeicoes.innerText = refeicoes.length;
+}
+
+// Peso
+function registrarPeso(){
+
+    let peso = document.getElementById("peso").value;
+
+    document.getElementById("pesoAtual").innerText =
+    peso + " kg";
+
+    alert("Evolução registrada!");
+}
+
+</script>
+
+</body>
+</html>
